@@ -3,7 +3,7 @@ const itemsRouter = require('express').Router()
 const Item = require('./models/item')
 
 itemsRouter.get('/api/items', (request, response, next) => {
-  Person.find({})
+  Item.find({})
     .then(items => {
       response.json(items.map(item => item.toJSON()))
     })
@@ -54,14 +54,14 @@ itemsRouter.put('/api/items/:id', (request, response, next) => {
     .catch(error => next(error))
 })
 
-itemsRouter.post('/api/persons', (request, response, next) => {
+itemsRouter.post('/api/items', (request, response, next) => {
   const body = request.body
 
   const item = new Item({
     name: body.name,
   })
 
-  /*const duplicated = persons.find(person => person.name === body.name)
+  /*const duplicated = items.find(item => item.name === body.name)
     if (duplicated) {
       return response.status(400).json({
         error: 'name must be unique'
