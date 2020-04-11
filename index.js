@@ -5,37 +5,37 @@ const bodyParser = require('body-parser')
 const morgan = require('morgan')
 const cors = require('cors')
 
-const Person = require('./models/person')
+const Item = require('./models/item')
 
 app.use(bodyParser.json())
 app.use(morgan('tiny'))
 app.use(cors())
 app.use(express.static('build'))
 
-app.get('/api/persons', (request, response, next) => {
-  Person.find({})
-    .then(persons => {
-      response.json(persons.map(person => person.toJSON()))
+app.get('/api/items', (request, response, next) => {
+  Item.find({})
+    .then(persitemsons => {
+      response.json(items.map(item => item.toJSON()))
     })
     .catch(error => next(error))
 })
 
-app.get('/api/persons/info', (request, response) => {
-  Person.find({})
-    .then(persons => {
-      const people = Object.keys(persons).length
+app.get('/api/items/info', (request, response) => {
+  Item.find({})
+    .then(items => {
+      const elements = Object.keys(items).length
       const date = new Date()
       response.set('Content-Type', 'text/html')
-      response.send(`<p>Phonebook has info for ${people} people</p><p>${date}</p>`)
+      response.send(`<p>Shppoing list has info for ${elements} items</p><p>${date}</p>`)
     })
 
 })
 
-app.get('/api/persons/:id', (request, response, next) => {
-  Person.findById(request.params.id)
-    .then(person => {
-      if (person) {
-        response.json(person.toJSON())
+app.get('/api/items/:id', (request, response, next) => {
+  Item.findById(request.params.id)
+    .then(items => {
+      if (item) {
+        response.json(item.toJSON())
       } else {
         response.status(404).end()
       }
@@ -44,49 +44,47 @@ app.get('/api/persons/:id', (request, response, next) => {
 })
 
 
-app.delete('/api/persons/:id', (request, response, next) => {
-  Person.findByIdAndRemove(request.params.id)
+app.delete('/api/items/:id', (request, response, next) => {
+  Item.findByIdAndRemove(request.params.id)
     .then(result => {
       response.status(204).end()
     })
     .catch(error => next(error))
 })
 
-app.put('/api/persons/:id', (request, response, next) => {
+app.put('/api/items/:id', (request, response, next) => {
   const body = request.body
 
-  const person = {
+  const item = {
     name: body.name,
-    number: body.number,
   }
 
-  Person.findByIdAndUpdate(request.params.id, person, { new: true })
-    .then(updatedNote => {
-      response.json(updatedNote.toJSON())
+  Item.findByIdAndUpdate(request.params.id, item, { new: true })
+    .then(updatedItem => {
+      response.json(updatedItem.toJSON())
     })
     .catch(error => next(error))
 })
 
-app.post('/api/persons', (request, response, next) => {
+app.post('/api/items', (request, response, next) => {
   const body = request.body
 
-  const person = new Person ({
+  const item = new Item ({
     name: body.name,
-    number: body.number,
   })
 
-  /*const duplicated = persons.find(person => person.name === body.name)
+  /*const duplicated = items.find(item => item.name === body.name)
   if (duplicated) {
     return response.status(400).json({
       error: 'name must be unique'
     })
   }*/
 
-  person
+  item
     .save()
-    .then(savedPerson => savedPerson.toJSON())
-    .then(savedAndFormattedPerson => {
-      response.json(savedAndFormattedPerson)})
+    .then(savedItem => savedItem.toJSON())
+    .then(savedAndFormattedItem => {
+      response.json(savedAndFormattedItem)})
     .catch(error => next(error))
 })
 
